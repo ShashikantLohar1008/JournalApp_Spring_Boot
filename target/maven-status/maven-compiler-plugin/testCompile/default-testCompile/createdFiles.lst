@@ -1,8 +1,0 @@
-net\shashikantlohar\journalApp\service\UserServiceTests.class
-net\shashikantlohar\journalApp\JournalAppApplicationTests.class
-net\shashikantlohar\journalApp\service\RedisTests.class
-net\shashikantlohar\journalApp\repository\UserRepositoryImplTests.class
-net\shashikantlohar\journalApp\service\EmailServiceTests.class
-net\shashikantlohar\journalApp\service\UserDetailsServiceImplTests.class
-net\shashikantlohar\journalApp\service\UserArgumentsProvider.class
-net\shashikantlohar\journalApp\cron\UserSchedulersTest.class
