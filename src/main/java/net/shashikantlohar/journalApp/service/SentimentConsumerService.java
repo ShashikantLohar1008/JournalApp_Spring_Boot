@@ -1,18 +1,17 @@
 package net.shashikantlohar.journalApp.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
-
 import net.shashikantlohar.journalApp.model.SentimentData;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
 @Service
 public class SentimentConsumerService {
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
+
+    public SentimentConsumerService(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     @KafkaListener(topics = "weekly-sentiments", groupId = "weekly-sentiment-group")
     public void consume(SentimentData sentimentData) {

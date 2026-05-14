@@ -2,22 +2,13 @@ package net.shashikantlohar.journalApp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
-
-import net.shashikantlohar.journalApp.entity.JournalEntry;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -25,12 +16,11 @@ import net.shashikantlohar.journalApp.entity.JournalEntry;
 public class JournalApplication {
 
     public static void main(String[] args) {
-        System.out.println("Starting Journal Application...");
         SpringApplication.run(JournalApplication.class, args);
     }
 
     @Bean
-    public PlatformTransactionManager falana(MongoDatabaseFactory dbFactory){
+    public PlatformTransactionManager transactionManager(MongoDatabaseFactory dbFactory){
         return new MongoTransactionManager(dbFactory);
     }
     @Bean

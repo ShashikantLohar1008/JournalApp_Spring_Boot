@@ -1,19 +1,19 @@
 package net.shashikantlohar.journalApp.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import net.shashikantlohar.journalApp.entity.User;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-
-import net.shashikantlohar.journalApp.entity.User;
 
 import java.util.List;
 
 public class UserRepositoryImpl {
 
+    private final MongoTemplate mongoTemplate;
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    public UserRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     public List<User> getUserForSA() {
         Query query = new Query();

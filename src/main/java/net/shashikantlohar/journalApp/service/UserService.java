@@ -1,17 +1,12 @@
 package net.shashikantlohar.journalApp.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.shashikantlohar.journalApp.controller.JournalEntryController;
 import net.shashikantlohar.journalApp.entity.User;
 import net.shashikantlohar.journalApp.repository.UserRepository;
 
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -21,10 +16,13 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public boolean saveNewUser(User user) {
         try {
@@ -33,11 +31,7 @@ public class UserService {
             userRepository.save(user);
             return true;
         } catch (Exception e) {
-            log.error("hahahhahhahahahah");
-            log.warn("hahahhahhahahahah");
-            log.info("hahahhahhahahahah");
-            log.debug("hahahhahhahahahah");
-            log.trace("hahahhahhahahahah");
+            log.error("Failed to save new user {}", user.getUserName(), e);
             return false;
         }
     }

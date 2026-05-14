@@ -1,12 +1,10 @@
 package net.shashikantlohar.journalApp.cache;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import net.shashikantlohar.journalApp.entity.ConfigJournalAppEntity;
 import net.shashikantlohar.journalApp.repository.ConfigJournalAppRepository;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +16,13 @@ public class AppCache {
         WEATHER_API;
     }
 
-    @Autowired
-    private ConfigJournalAppRepository configJournalAppRepository;
+    private final ConfigJournalAppRepository configJournalAppRepository;
 
     public Map<String, String> appCache;
+
+    public AppCache(ConfigJournalAppRepository configJournalAppRepository) {
+        this.configJournalAppRepository = configJournalAppRepository;
+    }
 
     @PostConstruct
     public void init(){

@@ -2,9 +2,7 @@ package net.shashikantlohar.journalApp.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import net.shashikantlohar.journalApp.api.response.WeatherResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +12,20 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisService {
 
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public RedisService(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public <T> T get(String key, Class<T> entityClass) {
         try {
-            Object o = redisTemplate.opsForValue().get(key);
+            String o = redisTemplate.opsForValue().get(key);
+            if (o == null) {
+                return null;
+            }
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(o.toString(), entityClass);
+            return mapper.readValue(o, entityClass);
         } catch (Exception e) {
             log.error("Exception ", e);
             return null;

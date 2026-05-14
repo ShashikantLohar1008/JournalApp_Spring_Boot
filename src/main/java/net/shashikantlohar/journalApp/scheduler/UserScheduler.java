@@ -1,10 +1,5 @@
 package net.shashikantlohar.journalApp.scheduler;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import net.shashikantlohar.journalApp.cache.AppCache;
 import net.shashikantlohar.journalApp.entity.JournalEntry;
 import net.shashikantlohar.journalApp.entity.User;
@@ -12,6 +7,9 @@ import net.shashikantlohar.journalApp.enums.Sentiment;
 import net.shashikantlohar.journalApp.model.SentimentData;
 import net.shashikantlohar.journalApp.repository.UserRepositoryImpl;
 import net.shashikantlohar.journalApp.service.EmailService;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -23,18 +21,17 @@ import java.util.stream.Collectors;
 @Component
 public class UserScheduler {
 
+    private final EmailService emailService;
+    private final UserRepositoryImpl userRepository;
+    private final AppCache appCache;
+    private final KafkaTemplate<String, SentimentData> kafkaTemplate;
 
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private UserRepositoryImpl userRepository;
-
-    @Autowired
-    private AppCache appCache;
-
-    @Autowired
-    private KafkaTemplate<String, SentimentData> kafkaTemplate;
+    public UserScheduler(EmailService emailService, UserRepositoryImpl userRepository, AppCache appCache, KafkaTemplate<String, SentimentData> kafkaTemplate) {
+        this.emailService = emailService;
+        this.userRepository = userRepository;
+        this.appCache = appCache;
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     @Scheduled(cron = "0 0 9 * * SUN")
     public void fetchUsersAndSendSaMail() {

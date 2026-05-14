@@ -8,7 +8,6 @@ import net.shashikantlohar.journalApp.service.UserDetailsServiceImpl;
 import net.shashikantlohar.journalApp.service.UserService;
 import net.shashikantlohar.journalApp.utilis.JwtUtil;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,15 +21,17 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Public APIs")
 public class PublicController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-    @Autowired
-    private UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    public PublicController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, UserService userService, JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @GetMapping("/health-check")
     public String healthCheck() {

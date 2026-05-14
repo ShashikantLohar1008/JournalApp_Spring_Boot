@@ -1,23 +1,29 @@
 package net.shashikantlohar.journalApp.service;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
-import net.shashikantlohar.journalApp.service.EmailService;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class EmailServiceTests {
 
-    @Autowired
+    @Mock
+    private JavaMailSender javaMailSender;
+
+    @InjectMocks
     private EmailService emailService;
 
-    @Disabled
     @Test
     void testSendMail() {
-        emailService.sendEmail("carnation_duchess348@slmail.me",
-                "Testing Java mail sender",
-                "Hi, aap kaise hain ?");
+        emailService.sendEmail("user@example.com", "Weekly sentiment", "Your journal summary is positive.");
+
+        verify(javaMailSender).send(any(SimpleMailMessage.class));
     }
 }

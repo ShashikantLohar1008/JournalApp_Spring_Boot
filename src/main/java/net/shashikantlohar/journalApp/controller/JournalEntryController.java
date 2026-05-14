@@ -8,7 +8,6 @@ import net.shashikantlohar.journalApp.service.JournalEntryService;
 import net.shashikantlohar.journalApp.service.UserService;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,11 +22,13 @@ import java.util.stream.Collectors;
 @Tag(name = "Journal APIs")
 public class JournalEntryController {
 
-    @Autowired
-    private JournalEntryService journalEntryService;
+    private final JournalEntryService journalEntryService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public JournalEntryController(JournalEntryService journalEntryService, UserService userService) {
+        this.journalEntryService = journalEntryService;
+        this.userService = userService;
+    }
 
     @GetMapping
     @Operation(summary = "Get all journal entries of a user")

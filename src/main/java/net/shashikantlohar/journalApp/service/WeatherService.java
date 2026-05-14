@@ -1,30 +1,28 @@
 package net.shashikantlohar.journalApp.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import net.shashikantlohar.journalApp.api.response.WeatherResponse;
 import net.shashikantlohar.journalApp.cache.AppCache;
 import net.shashikantlohar.journalApp.constants.Placeholders;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class WeatherService {
     @Value("${weather.api.key}")
     private String apiKey;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final AppCache appCache;
+    private final RedisService redisService;
 
-    @Autowired
-    private AppCache appCache;
-
-    @Autowired
-    private RedisService redisService;
+    public WeatherService(RestTemplate restTemplate, AppCache appCache, RedisService redisService) {
+        this.restTemplate = restTemplate;
+        this.appCache = appCache;
+        this.redisService = redisService;
+    }
 
     public WeatherResponse getWeather(String city) {
         WeatherResponse weatherResponse = redisService.get("weather_of_" + city, WeatherResponse.class);

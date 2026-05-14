@@ -6,10 +6,6 @@ import net.shashikantlohar.journalApp.entity.User;
 import net.shashikantlohar.journalApp.repository.JournalEntryRepository;
 
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +17,13 @@ import java.util.Optional;
 @Slf4j
 public class JournalEntryService {
 
-    @Autowired
-    private JournalEntryRepository journalEntryRepository;
+    private final JournalEntryRepository journalEntryRepository;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-
-
+    public JournalEntryService(JournalEntryRepository journalEntryRepository, UserService userService) {
+        this.journalEntryRepository = journalEntryRepository;
+        this.userService = userService;
+    }
 
     @Transactional
     public void saveEntry(JournalEntry journalEntry, String userName) {

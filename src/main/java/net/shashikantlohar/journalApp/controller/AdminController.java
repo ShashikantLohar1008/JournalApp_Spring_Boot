@@ -5,7 +5,6 @@ import net.shashikantlohar.journalApp.cache.AppCache;
 import net.shashikantlohar.journalApp.entity.User;
 import net.shashikantlohar.journalApp.service.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,13 @@ import java.util.List;
 @Tag(name = "Admin APIs")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final AppCache appCache;
 
-    @Autowired
-    private AppCache appCache;
+    public AdminController(UserService userService, AppCache appCache) {
+        this.userService = userService;
+        this.appCache = appCache;
+    }
 
     @GetMapping("/all-users")
     public ResponseEntity<?> getAllUsers() {

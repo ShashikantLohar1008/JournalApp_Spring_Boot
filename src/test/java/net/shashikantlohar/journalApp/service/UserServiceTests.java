@@ -1,44 +1,46 @@
 package net.shashikantlohar.journalApp.service;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import net.shashikantlohar.journalApp.entity.User;
 import net.shashikantlohar.journalApp.repository.UserRepository;
-import net.shashikantlohar.journalApp.service.UserService;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
 
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
+    @Test
+    public void testSaveNewUser() {
+        User user = User.builder().userName("ram").password("plain-password").build();
 
-    @Disabled
-    @ParameterizedTest
-    @ArgumentsSource(UserArgumentsProvider.class)
-    public void testSaveNewUser(User user) {
         assertTrue(userService.saveNewUser(user));
+
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        User savedUser = userCaptor.getValue();
+        assertEquals("ram", savedUser.getUserName());
+        assertNotEquals("plain-password", savedUser.getPassword());
+        assertEquals("USER", savedUser.getRoles().get(0));
     }
 
-    @Disabled
-    @ParameterizedTest
-    @CsvSource({
-            "1,1,2",
-            "2,10,12",
-            "3,3,9"
-    })
-    public void test(int a, int b, int expected){
-        assertEquals(expected, a + b);
+    @Test
+    public void testSaveNewUserReturnsFalseWhenRepositoryFails() {
+        User user = User.builder().userName("ram").password("plain-password").build();
+        when(userRepository.save(user)).thenThrow(new RuntimeException("database unavailable"));
+
+        assertFalse(userService.saveNewUser(user));
     }
 }

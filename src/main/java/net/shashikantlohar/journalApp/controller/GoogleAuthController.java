@@ -7,7 +7,6 @@ import net.shashikantlohar.journalApp.repository.UserRepository;
 import net.shashikantlohar.journalApp.service.UserDetailsServiceImpl;
 import net.shashikantlohar.journalApp.utilis.JwtUtil;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,20 +34,19 @@ public class GoogleAuthController {
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String clientSecret;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public GoogleAuthController(RestTemplate restTemplate, UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtil jwtUtil) {
+        this.restTemplate = restTemplate;
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
     @GetMapping("/callback")
     public ResponseEntity<?> handleGoogleCallback(@RequestParam String code) {
